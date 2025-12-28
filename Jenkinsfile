@@ -9,7 +9,7 @@ pipeline {
               docker container prune -f
               docker image prune -f
               # Uncomment the next line if you want to be aggressive:
-              # docker system prune -af --volumes
+              docker system prune -af --volumes
             '''
           }
         }
