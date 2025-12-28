@@ -1,44 +1,43 @@
 pipeline {
     agent any
-    tools {
-            sonar 'SonarScanner'  // Exact name from above
-        }
     stages {
-        stage('SCM') {           // <- Stage block here
-            checkout scm
-          }
-          stage('SonarQube Analysis') {  // <- Stage block here
-            def scannerHome = tool 'SonarScanner';
-            withSonarQubeEnv('SonarQube') {
-              sh "${scannerHome}/bin/sonar-scanner"
+        stage('SCM') {
+            steps {
+                checkout scm
             }
-          }
-
-        stage('Docker cleanup') {
-          steps {
-            sh '''
-              echo "Pruning Docker resources..."
-              docker container prune -f
-              docker image prune -f
-              # Uncomment the next line if you want to be aggressive:
-              docker system prune -af --volumes
-            '''
-          }
         }
-
-        stage('Test') {
-                steps {
-                    sh 'docker compose run --rm hello-world go test -v ./...'
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarScanner'
+                    withSonarQubeEnv('SonarQube') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
                 }
             }
-
+        }
+        stage('Docker cleanup') {
+            steps {
+                sh '''
+                    echo "Pruning Docker resources..."
+                    docker container prune -f
+                    docker image prune -f
+                    # Uncomment the next line if you want to be aggressive:
+                    docker system prune -af --volumes
+                '''
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'docker compose run --rm hello-world go test -v ./...'
+            }
+        }
         stage('Build') {
             steps {
                 sh 'docker compose build'
             }
         }
     }
-
     post {
         always {
             sh 'docker compose down'
