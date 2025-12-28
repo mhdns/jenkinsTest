@@ -4,22 +4,15 @@ pipeline {
             sonar 'SonarScanner'  // Exact name from above
         }
     stages {
-        stage('SCM') {
-            steps {
-                checkout scm
+        stage('SCM') {           // <- Stage block here
+            checkout scm
+          }
+          stage('SonarQube Analysis') {  // <- Stage block here
+            def scannerHome = tool 'SonarScanner';
+            withSonarQubeEnv('SonarQube') {
+              sh "${scannerHome}/bin/sonar-scanner"
             }
-        }
-
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    def scannerHome = tool 'SonarScanner'
-                    withSonarQubeEnv() {
-                        sh "${scannerHome}/bin/sonar-scanner"
-                    }
-                }
-            }
-        }
+          }
 
         stage('Docker cleanup') {
           steps {
