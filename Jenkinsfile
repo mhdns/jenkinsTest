@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label 'local_docker_cloud'
-    }
+    agent any
 
     stages {
         stage('Build') {
