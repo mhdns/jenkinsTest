@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    tools {
+            sonar 'SonarScanner'  // Exact name from above
+        }
     stages {
         stage('SCM') {
             steps {
