@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'docker'
+        label 'local_docker_cloud'
     }
 
     stages {
