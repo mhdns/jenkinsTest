@@ -2,6 +2,17 @@ pipeline {
     agent any
 
     stages {
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'sonar-scanner'
+                    withSonarQubeEnv('SonarQube') {
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=mhdns_jenkinsTest_AZtnNMrCMn4YZdQPhANw"
+                    }
+                }
+            }
+        }
+
         stage('Docker cleanup') {
           steps {
             sh '''
