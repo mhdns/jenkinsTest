@@ -10,7 +10,7 @@ pipeline {
             steps {
                 script {
                     def scannerHome = tool 'SonarScanner'
-                    withSonarQubeEnv('SonarQube') {
+                    withSonarQubeEnv('SonarQubeCloud') {
                         sh """
                            ${scannerHome}/bin/sonar-scanner \
                              -Dsonar.projectKey=your-go-project \
