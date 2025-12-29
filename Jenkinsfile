@@ -13,11 +13,12 @@ pipeline {
                     withSonarQubeEnv('SonarQube') {
                         sh """
                            ${scannerHome}/bin/sonar-scanner \
-                             -Dsonar.projectKey=your-project-key \
+                             -Dsonar.projectKey=your-go-project \
                              -Dsonar.sources=. \
-                             -Dsonar.go.exclusions=**/vendor/**,**/testdata/** \
-                             -Dsonar.tests=**/*_test.go \
-                             -Dsonar.test.inclusions=**/*_test.go
+                             -Dsonar.exclusions=vendor/**,testdata/** \
+                             -Dsonar.tests=. \
+                             -Dsonar.test.inclusions=*_test.go \
+                             -Dsonar.test.exclusions=vendor/**
                        """
                     }
                 }
