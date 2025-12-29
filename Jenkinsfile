@@ -27,15 +27,7 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarScanner'
                     withSonarQubeEnv('SonarQubeCloud') {
-                        sh """
-                           ${scannerHome}/bin/sonar-scanner \
-                             -Dsonar.projectKey=your-go-project \
-                             -Dsonar.sources=. \
-                             -Dsonar.exclusions=vendor/**,testdata/** \
-                             -Dsonar.tests=. \
-                             -Dsonar.test.inclusions=*_test.go \
-                             -Dsonar.test.exclusions=vendor/**
-                       """
+                        sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
             }
