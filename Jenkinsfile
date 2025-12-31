@@ -1,5 +1,14 @@
 pipeline {
     agent any
+
+    environment {
+        AWS_REGION = "ap-southeast-1"
+        IMAGE_TAG = "v0.0.1"
+        REGISTRY = "public.ecr.aws"
+        NAMESPACE = "o7i4d3b7"
+        REPO_NAME = "mhdns/hello-world"
+    }
+
     stages {
         stage('SCM') {
             steps {
@@ -58,7 +67,20 @@ pipeline {
                 branch 'release/*'
             }
             steps {
-                echo 'this is from the release branch'
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                              credentialsId: 'aws-ecr']]) {
+                sh '''
+                  aws ecr-public get-login-password --region $AWS_REGION |
+                  docker login --username AWS --password-stdin $REGISTRY
+
+                  docker build -t hello-world:$IMAGE_TAG .
+
+                  docker tag hello-world:$IMAGE_TAG \
+                  $REGISTRY/$NAMESPACE/$REPO_NAME:$IMAGE_TAG
+
+                  docker push \
+                  $REGISTRY/$NAMESPACE/$REPO_NAME:$IMAGE_TAG
+                '''
             }
         }
     }
