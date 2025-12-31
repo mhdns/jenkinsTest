@@ -70,16 +70,13 @@ pipeline {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
                               credentialsId: 'aws-ecr']]) {
                 sh '''
-                  aws ecr-public get-login-password --region $AWS_REGION |
+                  aws ecr-public get-login-password --region $AWS_REGION | \
                   docker login --username AWS --password-stdin $REGISTRY
 
-                  docker build -t hello-world:$IMAGE_TAG .
-
-                  docker tag hello-world:$IMAGE_TAG \
-                  $REGISTRY/$NAMESPACE/$REPO_NAME:$IMAGE_TAG
-
-                  docker push \
-                  $REGISTRY/$NAMESPACE/$REPO_NAME:$IMAGE_TAG
+                  docker buildx build \
+                    --platform linux/amd64 \
+                    -t $REGISTRY/$NAMESPACE/$REPO_NAME:$IMAGE_TAG \
+                    --push .
                 '''
                 }
             }
