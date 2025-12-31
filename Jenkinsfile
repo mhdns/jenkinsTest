@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = "ap-southeast-1"
+        AWS_REGION = "us-east-1" // public ECR always uses us-east-1
         IMAGE_TAG = "v0.0.1"
         REGISTRY = "public.ecr.aws"
         NAMESPACE = "o7i4d3b7"
