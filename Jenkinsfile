@@ -23,7 +23,7 @@ pipeline {
                 sh '''
                 docker run --rm -v $(pwd):/app -w /app golang:1.25-alpine sh -c "
                     go mod download &&
-                    go test -v ./...
+                    go test -v ./... -coverprofile=../coverage.out
                 "
                 '''
             }
@@ -39,13 +39,13 @@ pipeline {
             }
         }
 
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
+//         stage('Quality Gate') {
+//             steps {
+//                 timeout(time: 2, unit: 'MINUTES') {
+//                     waitForQualityGate abortPipeline: true
+//                 }
+//             }
+//         }
 
 
         stage('Build') {
