@@ -53,6 +53,14 @@ pipeline {
                 sh 'docker compose build'
             }
         }
+        stage('Deploy') {
+            when {
+                branch 'release'
+            }
+            steps {
+                echo 'this is from the release branch'
+            }
+        }
     }
     post {
         always {
