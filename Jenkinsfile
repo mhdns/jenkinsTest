@@ -81,6 +81,7 @@ pipeline {
                   docker push \
                   $REGISTRY/$NAMESPACE/$REPO_NAME:$IMAGE_TAG
                 '''
+                }
             }
         }
     }
