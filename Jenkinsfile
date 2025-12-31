@@ -20,7 +20,12 @@ pipeline {
         stage('Test') {
             steps {
 //                 sh 'docker compose run --rm hello-world go test -v ./... -coverprofile=/app/coverage.out'
-                sh 'docker run --rm -v $(pwd):/app golang:1.25-alpine go test -v /app/... -coverprofile=/app/coverage.out'
+                sh '''
+                docker run --rm -v $(pwd):/app -w /app golang:1.25-alpine sh -c "
+                    go mod download &&
+                    go test -v ./...
+                "
+                '''
             }
         }
         stage('SonarQube Analysis') {
